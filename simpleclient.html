@@ -12,7 +12,8 @@
 // if user is running mozilla then use it's built-in WebSocket
 window.WebSocket = window.WebSocket || window.MozWebSocket;
 
-let connection = new WebSocket('ws://127.0.0.1:8080');
+//let connection = new WebSocket('ws://127.0.0.1:8080');
+let connection = new WebSocket('ws://jamchat.herokuapp.com');
 let div = document.querySelector('div')
 let input = document.querySelector('input')
 let name = document.querySelectorAll('input')[1]
@@ -44,8 +45,7 @@ function sendMessage (type, payload, user) {
   connection.send(JSON.stringify({data: payload, type, user}));
 }
 
-input.addEventListener('input', function (e) {
-  console.log('change')
+button.addEventListener('click', function (e) {
   sendMessage('text', input.value, name.value)
 })
 
