@@ -1,10 +1,13 @@
 <html>
   <body>
+    <div>
+    </div>
     <script>
 // if user is running mozilla then use it's built-in WebSocket
 window.WebSocket = window.WebSocket || window.MozWebSocket;
 
-var connection = new WebSocket('ws://127.0.0.1:8080');
+let connection = new WebSocket('ws://127.0.0.1:8080');
+let div = document.querySelector('div')
 
 connection.onopen = function () {
 };
@@ -16,12 +19,20 @@ connection.onerror = function (error) {
 connection.onmessage = function (message) {
   // try to decode json (I assume that each message
   // from server is json)
-  console.log(message.data)
+  try {
+    let json = JSON.parse(message.data);
+    console.log(json.data);
+    let p = document.createElement('p');
+    p.textContent = json.data;
+    div.appendChild(p);
+  } catch (e) {
+    // Ignore malformed response
+  }
   // handle incoming message
 };
 
-function sendText (text) {
-  connection.send(JSON.stringify({data: text}));
+function sendMessage (type, payload, user) {
+  connection.send(JSON.stringify({data: payload, type, user}));
 }
     </script>
   </body>
