@@ -2,12 +2,21 @@
   <body>
     <div>
     </div>
+    <input type="text">
+    </input>
+    <input type="text">
+    </input>
+    <button>
+    </button>
     <script>
 // if user is running mozilla then use it's built-in WebSocket
 window.WebSocket = window.WebSocket || window.MozWebSocket;
 
 let connection = new WebSocket('ws://127.0.0.1:8080');
 let div = document.querySelector('div')
+let input = document.querySelector('input')
+let name = document.querySelectorAll('input')[1]
+let button = document.querySelectorAll('button')[0]
 
 connection.onopen = function () {
 };
@@ -23,7 +32,7 @@ connection.onmessage = function (message) {
     let json = JSON.parse(message.data);
     console.log(json.data);
     let p = document.createElement('p');
-    p.textContent = json.data;
+    p.textContent = json.user + ': ' + json.data;
     div.appendChild(p);
   } catch (e) {
     // Ignore malformed response
@@ -34,6 +43,12 @@ connection.onmessage = function (message) {
 function sendMessage (type, payload, user) {
   connection.send(JSON.stringify({data: payload, type, user}));
 }
+
+input.addEventListener('input', function (e) {
+  console.log('change')
+  sendMessage('text', input.value, name.value)
+})
+
     </script>
   </body>
 </html>
